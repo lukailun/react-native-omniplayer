@@ -11660,7 +11660,7 @@ __metadata:
     react-native: 0.76.2
     react-native-builder-bob: ^0.32.1
     react-native-video: ^6.8.0
-    react-native-vlc-media-player: ^1.0.70
+    react-native-vlc-media-player: lukailun/react-native-vlc-media-player
     react-native-web: ~0.19.13
   languageName: unknown
   linkType: soft
@@ -11685,13 +11685,13 @@ __metadata:
     react: 18.3.1
     react-native: 0.76.2
     react-native-builder-bob: ^0.32.1
+    react-native-video: ^6.8.0
+    react-native-vlc-media-player: lukailun/react-native-vlc-media-player
     release-it: ^17.10.0
     typescript: ^5.2.2
   peerDependencies:
     react: "*"
     react-native: "*"
-    react-native-video: ^6.8.0
-    react-native-vlc-media-player: ^1.0.70
   languageName: unknown
   linkType: soft
 
@@ -11727,13 +11727,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-vlc-media-player@npm:^1.0.70":
-  version: 1.0.70
-  resolution: "react-native-vlc-media-player@npm:1.0.70"
+react-native-vlc-media-player@lukailun/react-native-vlc-media-player:
+  version: 1.0.71
+  resolution: "react-native-vlc-media-player@https://github.com/lukailun/react-native-vlc-media-player.git#commit=7f72b878d29612a637e80a6ec5649a83832e1807"
   dependencies:
     react-native-slider: ^0.11.0
     react-native-vector-icons: ^9.2.0
-  checksum: 48d2208c91874dbf202170b4d6b6021ecba595ad5a13532dafe6f0a9635794d57cb81222bd5380b931f01dae524a814775297458ca0f4667f8bc96a4fa5f4615
+  checksum: 9f3815d9f3112bf034d7d2e428838fac3b3ecfbd8a418252d363b69b1f30aa19cca9e462a7c435139c2438fd84ac077af55cb91d4e16d0e07521c2d25a6f7aa8
   languageName: node
   linkType: hard
 

@@ -1,17 +1,12 @@
 import { forwardRef, useRef } from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
+import { StyleSheet, Text, type StyleProp, type ViewStyle } from 'react-native';
 import Video, {
   ResizeMode,
   type VideoRef,
   type EnumValues,
-  type ReactVideoSource,
 } from 'react-native-video';
 import { VLCPlayer } from 'react-native-vlc-media-player';
+import PlayerMode from '../types/PlayerMode';
 
 export interface VideoPlayerRef {
   setUrl?: (url: string) => void;
@@ -21,12 +16,9 @@ export interface VideoPlayerRef {
   pause?: () => void;
 }
 
-export const { width, height, scale, fontScale } = Dimensions.get('window');
-const VIDEO_DEFAULT_HEIGHT = width * (9 / 16);
-
 export interface VideoPlayerProps {
-  // mode: GlobalPlayerMode
-  source?: ReactVideoSource;
+  mode?: PlayerMode;
+  uri: string;
   resizeMode?: EnumValues<ResizeMode>;
   style?: StyleProp<ViewStyle>;
   controls?: boolean;
@@ -36,13 +28,14 @@ export interface VideoPlayerProps {
   rate?: number;
   repeat?: boolean;
   volume?: number;
-  onLoad?: (duration: number) => void;
-  onProgress?: (info: {
+  onLoad?: (event: { duration: number }) => void;
+  onProgress?: (event: {
+    duration: number;
     currentTime: number;
     position: number;
     remainingTime: number;
-    ended: boolean;
   }) => void;
+  onBuffer?: (event: { isBuffering: boolean }) => void;
   onTogglePlayStatus?: (isPlaying: boolean) => void;
   onToggleShowsMask?: (showsMask: boolean) => void;
   onToggleSubtitles?: (showsSubtitles: boolean) => void;
@@ -53,53 +46,105 @@ export interface VideoPlayerProps {
 }
 
 const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
-  (
-    {
-      source,
-      style,
-      controls,
-      muted,
-      paused,
-      playInBackground,
-      rate,
-      repeat,
-      resizeMode,
-      volume,
-    },
-    ref
-  ) => {
+  ({
+    mode = PlayerMode.AUTO,
+    uri,
+    style,
+    controls,
+    muted,
+    paused,
+    playInBackground,
+    rate,
+    repeat,
+    resizeMode,
+    volume,
+    onLoad,
+    onProgress,
+    onBuffer,
+  }) => {
     const videoRef = useRef<VideoRef>(null);
+
+    const isMp3OrMp4 = () => {
+      const lowerCasedUri = uri.toLowerCase();
+      return lowerCasedUri.endsWith('.mp3') || lowerCasedUri.endsWith('.mp4');
+    };
+
+    const shouldUseReactNativeVideoPlayer = () => {
+      switch (mode) {
+        case PlayerMode.AUTO:
+          return isMp3OrMp4();
+        case PlayerMode.VLC:
+          return false;
+        case PlayerMode.REACT_NATIVE_VIDEO:
+          return true;
+      }
+    };
 
     return (
       <>
-        {/* <Video
-          source={source}
-          style={[styles.container, style]}
-          controls={controls}
-          muted={muted}
-          paused={paused}
-          playInBackground={playInBackground}
-          rate={rate}
-          repeat={repeat}
-          resizeMode={resizeMode}
-          volume={volume}
-          ref={videoRef}
-          // onLoad={() => {
-          //   console.log('onLoad');
-          //   videoRef.current?.play();
-          // }}
-          onError={(error: any) => {
-            console.log('onError: ', error);
-          }}
-        /> */}
-        <VLCPlayer
-          source={source}
-          style={[styles.container, style]}
-          paused={paused}
-          rate={rate}
-          repeat={repeat}
-          // controls={controls}
-        />
+        <Text>
+          {shouldUseReactNativeVideoPlayer() ? 'ReactNativeVideo' : 'VLCPlayer'}
+        </Text>
+        {shouldUseReactNativeVideoPlayer() && (
+          <Video
+            source={{ uri }}
+            style={[styles.container, style]}
+            controls={controls}
+            muted={muted}
+            paused={paused}
+            playInBackground={playInBackground}
+            rate={rate}
+            repeat={repeat}
+            resizeMode={resizeMode}
+            volume={volume}
+            ref={videoRef}
+            onLoad={(event) => onLoad?.({ duration: event.duration })}
+            onProgress={(event) =>
+              onProgress?.({
+                duration: event.seekableDuration,
+                currentTime: event.currentTime,
+                position:
+                  event.seekableDuration > 0
+                    ? event.currentTime / event.seekableDuration
+                    : 0,
+                remainingTime: event.seekableDuration - event.currentTime,
+              })
+            }
+            onBuffer={(event) => {
+              onBuffer?.({ isBuffering: event.isBuffering });
+            }}
+            // onError={(error) => {
+            //   console.log(`Video onError: ${JSON.stringify(error)}`);
+            // }}
+          />
+        )}
+        {!shouldUseReactNativeVideoPlayer() && (
+          <VLCPlayer
+            source={{ uri }}
+            style={[styles.container, style]}
+            muted={muted}
+            paused={paused}
+            rate={rate}
+            repeat={repeat}
+            volume={volume}
+            onLoad={(event) => onLoad?.({ duration: event.duration / 1000 })}
+            onProgress={(event) =>
+              onProgress?.({
+                duration: event.duration / 1000,
+                currentTime: event.currentTime / 1000,
+                position: event.position,
+                remainingTime: (event.duration - event.currentTime) / 1000,
+              })
+            }
+            onBuffering={(event) => {
+              console.log(JSON.stringify(event));
+            }}
+
+            // onError={(props) => {
+            //   console.log(`VLCPlayer onError: ${props.target}`);
+            // }}
+          />
+        )}
       </>
     );
   }
@@ -108,7 +153,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: '100%',
+    height: '50%',
   },
 });
 

@@ -16,7 +16,7 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.2",
     "react-native-video": "^6.8.0",
-    "react-native-vlc-media-player": "^1.0.70",
+    "react-native-vlc-media-player": "lukailun/react-native-vlc-media-player",
     "react-native-web": "~0.19.13"
   },
   "devDependencies": {
