@@ -89,7 +89,9 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-video": "^6.8.0",
+    "react-native-vlc-media-player": "^1.0.70"
   },
   "workspaces": [
     "example"
