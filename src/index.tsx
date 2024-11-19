@@ -1,1 +1,3 @@
-export { default as VideoPlayer } from './components/VideoPlayer';
+import VideoPlayer from './components/VideoPlayer';
+export { VideoPlayer };
+export default VideoPlayer;

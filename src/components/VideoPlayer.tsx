@@ -1,12 +1,17 @@
 import { forwardRef, useRef } from 'react';
 import {
+  Dimensions,
   StyleSheet,
-  Text,
-  View,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import Video, { type ResizeMode, type VideoRef } from 'react-native-video';
+import Video, {
+  ResizeMode,
+  type VideoRef,
+  type EnumValues,
+  type ReactVideoSource,
+} from 'react-native-video';
+import { VLCPlayer } from 'react-native-vlc-media-player';
 
 export interface VideoPlayerRef {
   setUrl?: (url: string) => void;
@@ -16,9 +21,21 @@ export interface VideoPlayerRef {
   pause?: () => void;
 }
 
+export const { width, height, scale, fontScale } = Dimensions.get('window');
+const VIDEO_DEFAULT_HEIGHT = width * (9 / 16);
+
 export interface VideoPlayerProps {
   // mode: GlobalPlayerMode
+  source?: ReactVideoSource;
+  resizeMode?: EnumValues<ResizeMode>;
   style?: StyleProp<ViewStyle>;
+  controls?: boolean;
+  muted?: boolean;
+  paused?: boolean;
+  playInBackground?: boolean;
+  rate?: number;
+  repeat?: boolean;
+  volume?: number;
   onLoad?: (duration: number) => void;
   onProgress?: (info: {
     currentTime: number;
@@ -36,27 +53,62 @@ export interface VideoPlayerProps {
 }
 
 const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
-  (props, ref) => {
+  (
+    {
+      source,
+      style,
+      controls,
+      muted,
+      paused,
+      playInBackground,
+      rate,
+      repeat,
+      resizeMode,
+      volume,
+    },
+    ref
+  ) => {
     const videoRef = useRef<VideoRef>(null);
-    const sampleVideoUrl =
-      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+
     return (
-      <Video
-        source={{ uri: sampleVideoUrl }}
-        ref={videoRef}
-        style={styles.backgroundVideo}
-      />
+      <>
+        {/* <Video
+          source={source}
+          style={[styles.container, style]}
+          controls={controls}
+          muted={muted}
+          paused={paused}
+          playInBackground={playInBackground}
+          rate={rate}
+          repeat={repeat}
+          resizeMode={resizeMode}
+          volume={volume}
+          ref={videoRef}
+          // onLoad={() => {
+          //   console.log('onLoad');
+          //   videoRef.current?.play();
+          // }}
+          onError={(error: any) => {
+            console.log('onError: ', error);
+          }}
+        /> */}
+        <VLCPlayer
+          source={source}
+          style={[styles.container, style]}
+          paused={paused}
+          rate={rate}
+          repeat={repeat}
+          // controls={controls}
+        />
+      </>
     );
   }
 );
 
 const styles = StyleSheet.create({
-  backgroundVideo: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
+  container: {
+    width: '100%',
+    height: '100%',
   },
 });
 
