@@ -1,6 +1,6 @@
 # react-native-omniplayer
 
-demo
+A React Native universal video player that automatically switches between react-native-video and VLC player based on format compatibility.
 
 ## Installation
 
