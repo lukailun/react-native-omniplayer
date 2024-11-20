@@ -1,6 +1,6 @@
 {
   "name": "react-native-omniplayer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A React Native universal video player that automatically switches between react-native-video and VLC player based on format compatibility",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -64,10 +64,6 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {
-    "react-native-video": "^6.8.0",
-    "react-native-vlc-media-player": "lukailun/react-native-vlc-media-player"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
@@ -93,7 +89,17 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-video": "^6.8.0",
+    "react-native-vlc-media-player": "*"
+  },
+  "peerDependenciesMeta": {
+    "react-native-video": {
+      "optional": false
+    },
+    "react-native-vlc-media-player": {
+      "optional": false
+    }
   },
   "workspaces": [
     "example"
