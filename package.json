@@ -1,6 +1,6 @@
 {
   "name": "react-native-omniplayer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A React Native universal video player that automatically switches between react-native-video and VLC player based on format compatibility",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
