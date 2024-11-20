@@ -11685,6 +11685,8 @@ __metadata:
     react: 18.3.1
     react-native: 0.76.2
     react-native-builder-bob: ^0.32.1
+    react-native-video: ^6.8.0
+    react-native-vlc-media-player: lukailun/react-native-vlc-media-player
     release-it: ^17.10.0
     typescript: ^5.2.2
   peerDependencies:
